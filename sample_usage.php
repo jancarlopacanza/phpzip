@@ -14,16 +14,31 @@ $zip = new compressToZip;
 
 /**
  * Define our variables
- * $sourceToZip = '.'; // Use a dot to zip all files and folders in current directory
+ * Use $sourceToZip = '.'; // Use a dot to zip all files and folders in current directory
+ * $sourceToZip can be an array of files or folder
  */
-//$sourceToZip = 'jc_folder';
+
+//$sourceToZip = array('app','js','skin','var/picaris');
 //$destinationOfZip = 'ZIP';
-
-// Process zip
-//$zip->createZip( $sourceToZip , $destinationOfZip );
-
-// Extract zip
-//$source = "ZIP/jc_folder.zip";
-//$destination = "UNZIP";
 //
-//$zip->extractZip( $source, $destination );
+//try
+//{
+//    // Process zip
+//    $zip->createZip( $sourceToZip , $destinationOfZip );
+//} catch (Exception $exc)
+//{
+//    echo $exc->getTraceAsString();
+//}
+
+
+$source = array('ZIP/app.zip','ZIP/js.zip','ZIP/skin.zip','ZIP/picaris.zip');
+$destination = "UNZIP";
+
+try
+{
+    // Extract zip
+    $zip->extractZip( $source, $destination );
+} catch (Exception $exc)
+{
+    echo $exc->getTraceAsString();
+}
