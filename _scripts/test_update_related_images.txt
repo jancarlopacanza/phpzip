@@ -1,0 +1,54 @@
+<?php
+
+require 'app/Mage.php';
+
+ini_set('display_errors', 1);
+
+umask(0);
+
+Mage::app();
+
+$collection = Mage::getModel('catalog/product')->getCollection();
+
+$imagePath = Mage::getBaseDir() .DS. 'var' .DS. 'images' .DS. 'related' .DS. '1902-watermark-images-01.png';
+foreach ($collection as $p)
+{
+    $product = Mage::getModel('catalog/product')->load($p->getId());
+    $relatedIds = $product->getRelatedProductIds();
+    if (!empty($relatedIds))
+    {
+        foreach ($relatedIds as $relId)
+        {
+            $relatedProduct = Mage::getModel('catalog/product')->load($relId);
+
+            $mediaTypeArray = array('thumbnail', 'small_image', 'image');
+            
+            if (file_exists($imagePath))
+            {
+                try
+                {
+                    // Add the image
+                    $relatedProduct->addImageToMediaGallery($imagePath, $mediaTypeArray, false, false);
+                    // Set image as default
+                    $value = $relatedProduct->getData('image');
+                    if ($value) {
+                        Mage::getSingleton('catalog/product_action')
+                                ->updateAttributes(array($relId), array(
+                                    'image' => $value,
+                                    'small_image' => $value,
+                                    'thumbnail' => $value,
+                                        ), 0);  // 0 Default Config Scope
+                    }
+                } catch (Exception $e)
+                {
+                    echo $e->getMessage().PHP_EOL.$e->getTraceAsString()."<br/>";
+                }
+            } else
+            {
+                echo "Product does not have an image or the path is incorrect. Path was: {$filePath}<br/>";
+            }
+            
+            $relatedProduct->save();
+        }
+    }
+}
