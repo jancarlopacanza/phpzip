@@ -1,0 +1,44 @@
+$this->_productCollection = Mage::getModel('catalog/product')
+                                    ->getCollection()
+                                    ->addAttributeToFilter('entity_id', array('in' => $productIds));
+
+
+public function csvFileRead($filepath){
+        
+        if(isset($this->csvDataStore[$filepath])){
+            return $this->csvDataStore[$filepath];
+        }
+        
+        if(!file_exists($filepath)){
+                return false;
+                die();			
+        }
+
+        $skipfirstrow = false;
+        $csvdata = array();
+        if(($handle = fopen($filepath, 'r')) !== FALSE) {
+                while (($data = fgetcsv($handle, 1000, ',', '"')) !== FALSE) {
+                        if($skipfirstrow){
+                                $csvdata[] = $data;
+                        }
+
+                        $skipfirstrow = true;
+                }
+                fclose($handle);
+        }
+        $this->csvDataStore[$filepath] = $csvdata;
+        return $csvdata;
+    }
+
+if(Mage::app()->getFrontController()->getAction() instanceof Mage_CatalogSearch_ResultController)
+
+
+$customers_collection->getSelect()->order(
+    new Zend_Db_Expr(
+        "CASE WHEN 'consult_lastname' = '$search' THEN 1
+        WHEN 'consult_lastname' = '%$search' THEN 2
+        WHEN 'consult_lastname' = '$search%' THEN 3
+        WHEN 'consult_lastname' = '%$search%' THEN 4
+        ELSE 5 END"
+    )
+);
