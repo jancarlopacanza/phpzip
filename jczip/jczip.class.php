@@ -38,10 +38,10 @@ class compressToZip extends ZipArchive
 
                 if (basename($source) == '.')
                 {
-                    $filename = date('Ymd') . '.zip';
+                    $filename = 'root_dir_' . date('YmdHis') . '.zip';
                 } else
                 {
-                    $filename = basename($source) . '.zip';
+                    $filename = basename($source) . '_' . date('YmdHis') . '.zip';
                 }
                 $pathname = $destination . '/' . $filename;
 
